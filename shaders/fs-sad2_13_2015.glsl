@@ -7,7 +7,7 @@ const int STEPS = 100;
 const float PRECISION = .001;
 const float MAX_DISTANCE = 10.;
 
-const int numOfLights = 5;
+const int numOfLights = 20;
 
 vec3 lightPos[  numOfLights ];
 vec3 lightCols[ numOfLights ];
@@ -61,13 +61,6 @@ vec2 map( vec3 pos ){
     
 }
 
-vec2 mapRefract( vec3 pos ){  
-    
-  vec2 res = vec2( length( pos ) - .3   , 0. );
-
-  return res;
-    
-}
 
 
 /*
@@ -83,7 +76,6 @@ $lightLMR
 $calcLookAtMatrix
 $calcNormal
 $calcIntersection
-$calcRefract
 
 
 
@@ -147,21 +139,7 @@ void main(){
       vec3 dir = normalize(pos - lightPos[i]);
 
       vec3 refr = refract( dir , nor , .8 );
-
-
-      vec2 center = calcRefract( pos - refr * .01 , refr , PRECISION , MAX_DISTANCE  );
-
-
-      col += (refr * .5 + .5)  * .1;
-
-      if( center.y > -.5 ){
-      //vec3
-        col = max( vec3( 0. ) , col - nor * .5 - .5);
-
-      }
-
-
-
+      col *= refr * .5 + .5;
  
     }
 

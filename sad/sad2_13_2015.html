@@ -34,6 +34,8 @@
 
       var displace , sem , rainbow;
 
+      var pixelRatio = window.devicePixelRatio / 4 ;
+
 
       var uniforms = {
         time:{type:"f",value:0},
@@ -91,7 +93,7 @@
 				scene.add( mesh );
 
         renderer = new THREE.WebGLRenderer();
-				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setPixelRatio( pixelRatio );
 				demo.appendChild( renderer.domElement );
 
         stats = new Stats();
