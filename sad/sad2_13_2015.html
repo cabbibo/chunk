@@ -1,0 +1,137 @@
+<html>
+
+  <head>
+    <style>
+
+      html{ background:#000 }
+      body{ 
+        margin: 0px;
+        font-family:"GeoSans";
+        font-size:22px;
+      }
+
+      #stats{
+
+        z-index: 999;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <div id="demo"></div>
+
+    <script src="../lib/three.min.js"></script>
+    <script src="../lib/jquery.min.js"></script>
+    <script src="../ShaderLoader.js"></script>
+    <script src="../lib/stats.min.js"></script>
+
+    <script>
+
+
+      var displace , sem , rainbow;
+
+
+      var uniforms = {
+        time:{type:"f",value:0},
+        mouse:{ type:"v2" , value:new THREE.Vector2() },
+        resolution:{ type:"v2" , value:new THREE.Vector2() },
+      }
+
+      var camera, renderer, scene , clock , stats;
+      
+      var vs, fs;
+
+      var geometry, material , light;
+
+
+      var shaders = new ShaderLoader( '../shaders' , '../chunks' );
+
+      shaders.load( 'vs-pass' , 'pass' , 'vertex' );
+      shaders.load( 'fs-sad2_13_2015' , 'world' , 'fragment' );
+
+
+      shaders.shaderSetLoaded = function(){
+
+        init();
+        animate();
+
+      }
+
+      function init(){
+
+        var demo = document.getElementById("demo");
+
+        var w = window.innerWidth;
+
+        var h = window.innerHeight;
+
+        clock = new THREE.Clock();
+
+        camera = new THREE.Camera();
+				camera.position.z = 1;
+        //camera.position.y = 200;
+
+        scene = new THREE.Scene();
+      
+				var geometry = new THREE.PlaneBufferGeometry( 2, 2 );
+               
+        var material = new THREE.ShaderMaterial({
+
+          uniforms:uniforms,
+          vertexShader:   shaders.vs.pass,
+          fragmentShader: shaders.fs.world,
+
+        });
+
+        var mesh = new THREE.Mesh( geometry, material );
+				scene.add( mesh );
+
+        renderer = new THREE.WebGLRenderer();
+				renderer.setPixelRatio( window.devicePixelRatio );
+				demo.appendChild( renderer.domElement );
+
+        stats = new Stats();
+        console.log( stats );
+        demo.appendChild( stats.domElement );
+
+        onWindowResize();
+
+				window.addEventListener( 'resize', onWindowResize, false );
+				window.addEventListener( 'mousemove', onMouseMove, false );
+                
+      }
+
+      function animate(){
+  
+        stats.update();
+        uniforms.time.value += clock.getDelta();
+        renderer.render( scene , camera );
+        requestAnimationFrame( animate );
+
+      }
+
+
+      function onMouseMove( event ){
+
+        uniforms.mouse.value.x = event.clientX;
+        uniforms.mouse.value.y = event.clientY;
+
+      }
+
+      function onWindowResize( event ) {
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+				uniforms.resolution.value.x = renderer.domElement.width;
+				uniforms.resolution.value.y = renderer.domElement.height;
+
+			}
+
+    </script>
+
+  </body>
+</html>
