@@ -21,6 +21,7 @@
     <script src="../lib/three.min.js"></script>
     <script src="../lib/jquery.min.js"></script>
     <script src="../ShaderLoader.js"></script>
+    <script src="../lib/stats.min.js"></script>
 
     <script>
 
@@ -34,7 +35,7 @@
         resolution:{ type:"v2" , value:new THREE.Vector2() },
       }
 
-      var camera, renderer, scene , clock;
+      var camera, renderer, scene , clock , stats;
       
       var vs, fs;
 
@@ -87,6 +88,9 @@
 				renderer.setPixelRatio( window.devicePixelRatio );
 				demo.appendChild( renderer.domElement );
 
+        stats = new Stats();
+        renderer.domElement.appendChild( stats.domElement );
+
         onWindowResize();
 
 				window.addEventListener( 'resize', onWindowResize, false );
@@ -95,10 +99,12 @@
       }
 
       function animate(){
-
+  
+        stats.update();
         uniforms.time.value += clock.getDelta();
-        requestAnimationFrame( animate );
         renderer.render( scene , camera );
+        requestAnimationFrame( animate );
+
       }
 
 

@@ -119,8 +119,7 @@
     for( var i = 1; i < array.length; i++ ){
 
       var chunkName = array[i].split("\n")[0];
-      console.log('CHUNK NAME');
-      console.log( chunkName );
+      
       if( this.shaderChunks[chunkName] ){
 
         var tmpShader = finalShader.split( "$" + chunkName );
